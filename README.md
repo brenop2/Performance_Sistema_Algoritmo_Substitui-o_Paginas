@@ -1,7 +1,12 @@
 # Performance_Sistema_Algoritmo_Substitui-o_Paginas
 Apresentação do codigo para professor Andrey
 
-Link YOUTUBE : https://youtu.be/5W4Mov4pVcI
+## Integrantes e link do vídeo no YouTube
+
+- Abílio Pedro Alcântara Mota Batista
+- Breno Augusto Rocha
+
+Link do vídeo YOUTUBE: https://youtu.be/5W4Mov4pVcI
 
 ## Explicando o codigo:
 
@@ -108,11 +113,5 @@ def mru(paginas, qtd_quadros):
 - Move as páginas acessadas pro fim da lista.
 - Quando precisa remover uma página, remove a última pop(-1), que é a mais recente.
 
-## 5. Integrantes e link do vídeo no YouTube
-
-- Abílio Pedro Alcântara Mota Batista
-- Breno Augusto Rocha
-
-Link do vídeo:
 
 Projeto do TDE 2 apresentado à disciplina Performance em Sistemas Ciberfísicos, ministrada pelo Professor Andrey Cabral Meira do curso de Ciência da Computação da Pontificia Universidade Católica do Paraná.
