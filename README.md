@@ -1,87 +1,118 @@
 # Performance_Sistema_Algoritmo_Substitui-o_Paginas
 Apresentação do codigo para professor Andrey
 
+Link YOUTUBE : https://youtu.be/5W4Mov4pVcI
+
 ## Explicando o codigo:
 
-🧩 TDE 2 – Algoritmos de Substituição de Páginas
+# Algoritmos de Substituição de Páginas – FIFO, LRU e MRU
 
-Este projeto tem como objetivo simular e comparar o funcionamento dos algoritmos de substituição de páginas utilizados no gerenciamento de memória de sistemas operacionais: FIFO, LRU e MRU.
+## 1. Introdução
 
-🧠 Conceito Geral
+Nos sistemas operacionais, quando um processo precisa acessar uma página que não está na memória, ocorre uma falta de página (page fault).
+O sistema então precisa decidir qual página na memória será removida para
+dar espaço à nova. Os algoritmos de substituição são estratégias pra decidir isso.
 
-Quando a memória física (RAM) está cheia e o sistema precisa carregar uma nova página, é necessário decidir qual página existente será removida.
-Essa decisão é feita por meio de uma política de substituição de páginas, cujo objetivo é minimizar o número de faltas de página (page faults).
+Este projeto tem três deles:
 
-⚙️ Estrutura do Código
+- **FIFO (First In, First Out)**  
+- **LRU (Least Recently Used)**  
+- **MRU (Most Recently Used)**  
 
-O código é dividido em três funções principais — uma para cada algoritmo — e uma parte final de testes com diferentes sequências de páginas.
+Cada função desenvolvida em Python simula o funcionamento desses algorítmos.
 
-🔹 1. Função fifo(paginas, qtd_quadros)
+## 2. Explicação da função ```fifo```
 
-Implementa o algoritmo First-In, First-Out (FIFO).
+O FIFO é o algoritmo mais simples entre os três. Basicamente, a ideia é que a primeira página que entrou na memória também seja a primeira a sair.
 
-Mantém uma lista (quadros) que representa a memória.
+**No código, temos que:**
 
-Quando ocorre uma falta de página:
+```
+def fifo(paginas, qtd_quadros):
+    quadros = [] # lista que guarda as paginas na memoria
+    faltas = 0 # conta as faltas de pagina
 
-Se houver espaço livre, a nova página é adicionada;
+    print("Página\t\tQuadros")
+    for pagina in paginas:
+        if pagina not in quadros: # se a pagina nao estiver na memória
+            faltas += 1 # entao conta como falta
+            if len(quadros) < qtd_quadros: # se ainda tem espaço
+                quadros.append(pagina) # então coloca a pagina
+            else: # se esta cheio
+                quadros.pop(0) # remove a mais antiga
+                quadros.append(pagina) # e adiciona a mais nova
+        print(pagina, "\t\t", quadros) # print com tabulação pra mostrar a memória
+    return faltas
+```
 
-Caso contrário, a página mais antiga (a primeira que entrou) é removida (pop(0)) e substituída pela nova.
+- Mantém uma lista que funciona como uma fila.
+- A cada falta, insere a nova página no fim.
+- Quando a memória está cheia, remove a que entrou primeiro com o pop(0).
 
-Segue o princípio: “a primeira que entra é a primeira que sai”.
+## 3. Explicação da função ```lru```
 
-Esse método é simples, mas pode ser ineficiente em alguns casos, apresentando o Paradoxo de Belady (quando mais memória gera mais faltas).
+No LRU, quando é preciso remover alguma página, ele escolhe a menos recentemente usada.
 
-🔹 2. Função lru(paginas, qtd_quadros)
+**No código, temos que:**
 
-Implementa o algoritmo Least Recently Used (LRU).
+```
+def lru(paginas, qtd_quadros):
+    quadros = []
+    faltas = 0
 
-Também usa uma lista (quadros) para representar a memória.
+    print("Página\t\tQuadros")
+    for pagina in paginas:
+        if pagina in quadros: # se ta na memoria
+            quadros.remove(pagina) # entao tira pra colocar no final
+            quadros.append(pagina)
+        else: # se nao ta na memoria
+            faltas += 1
+            if len(quadros) < qtd_quadros:
+                quadros.append(pagina) # ainda tem espaço, entao adiciona
+            else:
+                quadros.pop(0) # remove a menos usada
+                quadros.append(pagina) # faz o append da nova
+        print(pagina, "\t\t", quadros)
+    return faltas
+```
 
-Quando uma página é usada, ela é movida para o final da lista, indicando que foi a mais recentemente utilizada.
+- Quando uma página é usada, ela vai pro final da lista.
+- Aí o início da lista representa a página menos usada.
+- Quando precisa remover, ele tira a do início com o pop(0).
 
-Quando ocorre uma falta e a memória está cheia, a primeira página da lista (a menos usada recentemente) é removida.
+## 4. Explicação da função ```mru```
 
-Esse algoritmo se baseia no Princípio da Localidade Temporal, que diz que páginas usadas recentemente têm alta probabilidade de serem usadas novamente.
-Na prática, o LRU é considerado o algoritmo mais eficiente e realista para substituição de páginas.
+É o oposto do LRU. Quando precisa remover uma página, escolhe a página usada mais recente.
 
-🔹 3. Função mru(paginas, qtd_quadros)
+```
+def mru(paginas, qtd_quadros):
+    quadros = []
+    faltas = 0
 
-Implementa o algoritmo Most Recently Used (MRU).
+    print("Página\t\tQuadros")
+    for pagina in paginas:
+        if pagina in quadros:
+            quadros.remove(pagina) # tira pra colocar no final
+            quadros.append(pagina)
+        else:
+            faltas += 1
+            if len(quadros) < qtd_quadros:
+                quadros.append(pagina)
+            else:
+                quadros.pop(-1) # removendo a ultima usada (no caso a mais recente)
+                quadros.append(pagina)
+        print(pagina, "\t\t", quadros)
+    return faltas
+```
 
-Similar ao LRU, mas faz o oposto:
+- Move as páginas acessadas pro fim da lista.
+- Quando precisa remover uma página, remove a última pop(-1), que é a mais recente.
 
-Quando há falta e a memória está cheia, ele remove a página mais recentemente usada (pop(-1)).
+## 5. Integrantes e link do vídeo no YouTube
 
-Essa estratégia é útil em situações específicas, como em bancos de dados com varreduras sequenciais, onde uma página recém-usada dificilmente será reutilizada logo depois.
+- Abílio Pedro Alcântara Mota Batista
+- Breno Augusto Rocha
 
-🧪 Testes e Simulações
+Link do vídeo:
 
-O código contém três listas de teste, cada uma com uma sequência de referências de páginas:
-
-paginas_a = [4, 3, 25, 8, 19, 6, 25, 8, 16, 35, 45, 22, 8, 3, 16, 25, 7]
-paginas_b = [4, 5, 7, 9, 46, 45, 14, 4, 64, 7, 65, 2, 1, 6, 8, 45, 14, 11]
-paginas_c = [4, 6, 7, 8, 1, 6, 10, 15, 16, 4, 2, 1, 4, 6, 12, 15, 16, 11]
-qtd_quadros = 8
-
-
-Cada sequência é testada com os três algoritmos (FIFO, LRU e MRU).
-Durante a execução, o programa exibe na tela o estado dos quadros da memória após cada acesso, mostrando quais páginas estão carregadas e quantas faltas ocorrem.
-
-📊 Resultados Esperados
-
-FIFO: fácil de implementar, mas pode gerar resultados inconsistentes.
-
-LRU: apresenta o melhor desempenho geral, com o menor número de faltas de página.
-
-MRU: funciona bem apenas em situações específicas, mas geralmente tem desempenho inferior ao LRU.
-
-🏁 Conclusão
-
-Com base nas simulações realizadas:
-
-O FIFO é o mais simples, porém menos eficiente.
-
-O MRU é útil apenas em casos específicos.
-
-O LRU é a melhor política de substituição na prática, por equilibrar desempenho e realismo, reduzindo significativamente as faltas de página.
+Projeto do TDE 2 apresentado à disciplina Performance em Sistemas Ciberfísicos, ministrada pelo Professor Andrey Cabral Meira do curso de Ciência da Computação da Pontificia Universidade Católica do Paraná.
